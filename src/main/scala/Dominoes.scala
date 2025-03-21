@@ -1,20 +1,20 @@
 import scala.annotation.tailrec
 
 object Dominoes:
-   def chain(input: List[(Int, Int)]): Option[List[(Int, Int)]] =
-      if input.isEmpty then Some(Nil)
-      else if input.size == 1 then if input.head.swap == input.head then Some(input) else None
+   def chain(l: List[(Int, Int)]): Option[List[(Int, Int)]] =
+      if l.isEmpty then Some(Nil)
+      else if l.size.eq(1) then if l.head.swap.equals(l.head) then Some(l) else None
       else
          @tailrec
-         def loop(dominoes: List[(Int, Int)], acc: List[(Int, Int)] = Nil): List[(Int, Int)] =
-            (acc.lastOption, dominoes.headOption) match
-               case (Some((_, a)), Some((b, _))) if a == b => loop(dominoes.tail, acc :+ dominoes.head)
-               case (Some((_, a)), Some((_, b))) if a == b => loop(dominoes.tail, acc :+ dominoes.head.swap)
-               case (_, None)                              =>
-                  (acc.headOption, acc.lastOption) match
-                     case (Some((a, _)), Some((_, b))) if a == b => acc
+         def loop(xs: List[(Int, Int)], acc: List[(Int, Int)] = Nil): List[(Int, Int)] =
+            (xs.headOption,acc.lastOption) match
+               case (Some((a, _)), Some((_, b))) if a.eq(b) => loop(xs.tail, acc.appended(xs.head))
+               case (Some((_, a)), Some((_, b))) if a.eq(b) => loop(xs.tail, acc.appended(xs.head.swap))
+               case (None, _)                               =>
+                  (acc.lastOption, acc.headOption) match
+                     case (Some((_, a)), Some((b, _))) if a.eq(b) => acc
                      case _                                      => Nil
-               case (None, _)                              => loop(dominoes.tail, acc :+ dominoes.head)
-               case _                                      => Nil
+               case (_, None)                               => loop(xs.tail, acc.appended(xs.head))
+               case _                                       => Nil
 
-         input.permutations.map(loop(_)).find(_.nonEmpty)
+         l.permutations.map(loop(_)).find(_.nonEmpty)
