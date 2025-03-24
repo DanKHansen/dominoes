@@ -11,8 +11,8 @@ object Dominoes:
                case (Some((a, _)), Some((_, b))) if a.eq(b) => loop(xs.tail, acc.appended(xs.head))
                case (Some((_, a)), Some((_, b))) if a.eq(b) => loop(xs.tail, acc.appended(xs.head.swap))
                case (None, _)                               =>
-                  (acc.lastOption, acc.headOption) match
-                     case (Some((_, a)), Some((b, _))) if a.eq(b) => acc
+                  (acc.headOption, acc.lastOption) match
+                     case (Some((a, _)), Some((_, b))) if a.eq(b) => acc
                      case _                                       => Nil
                case (_, None)                               => loop(xs.tail, acc.appended(xs.head))
                case _                                       => Nil
